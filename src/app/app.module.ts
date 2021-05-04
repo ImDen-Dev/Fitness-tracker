@@ -3,6 +3,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+
+import { environment } from '../environments/environment';
 
 import { AppComponent } from './app.component';
 import { MaterialModule } from './material.module';
@@ -40,6 +44,8 @@ import { StopTrainingComponent } from './training/current-training/stop-training
     FlexLayoutModule,
     FormsModule,
     ReactiveFormsModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
