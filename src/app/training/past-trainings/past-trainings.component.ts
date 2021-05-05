@@ -34,7 +34,6 @@ export class PastTrainingsComponent
   ngOnInit(): void {
     this.exChangedSubscription = this.trainingService.finishedExercisesChanged.subscribe(
       (exercises: ExerciseModel[]) => {
-        console.log(exercises);
         this.dataSource.data = exercises;
       }
     );
@@ -51,6 +50,8 @@ export class PastTrainingsComponent
   }
 
   ngOnDestroy(): void {
-    this.exChangedSubscription.unsubscribe();
+    if (this.exChangedSubscription) {
+      this.exChangedSubscription.unsubscribe();
+    }
   }
 }
