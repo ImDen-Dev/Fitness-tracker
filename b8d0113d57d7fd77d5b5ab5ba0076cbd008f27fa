@@ -1,0 +1,47 @@
+[33mcommit b8d0113d57d7fd77d5b5ab5ba0076cbd008f27fa[m[33m ([m[1;36mHEAD -> [m[1;32mngxs_v[m[33m, [m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m
+Author: ImDen-Dev <neckromant90@gmail.com>
+Date:   Wed May 5 22:10:59 2021 +0300
+
+    structuring the app
+
+[33mcommit a69a920abdd17f419386d6ac8ca0dfd740d08646[m
+Author: ImDen-Dev <neckromant90@gmail.com>
+Date:   Wed May 5 18:48:54 2021 +0300
+
+    Add Authentication
+
+[33mcommit d5ac7d587392adf3a6947f1a7ec8957cf92361a3[m
+Author: ImDen-Dev <neckromant90@gmail.com>
+Date:   Tue May 4 22:15:27 2021 +0300
+
+    Add firebase
+
+[33mcommit 3ce4f1f63123d55c8cacb9e65805aeda42b8a639[m
+Author: ImDen-Dev <neckromant90@gmail.com>
+Date:   Sun May 2 07:57:57 2021 +0300
+
+    Add trainings
+
+[33mcommit be888688cc4a332d5c395356bd1ecdad42a81706[m
+Author: ImDen-Dev <neckromant90@gmail.com>
+Date:   Sat May 1 09:12:45 2021 +0300
+
+    Created a sidenav and header
+
+[33mcommit 4b1acce6dae0761edc94bb8a1b02821469f7156b[m
+Author: ImDen-Dev <neckromant90@gmail.com>
+Date:   Wed Apr 28 21:03:10 2021 +0300
+
+    Add routing
+
+[33mcommit a4aa23c9c88d322e619e57804d1f22d741c0fd78[m
+Author: ImDen-Dev <neckromant90@gmail.com>
+Date:   Wed Apr 28 19:47:30 2021 +0300
+
+    Start fitness-tracker app
+
+[33mcommit b0bde8e6d9e11e5a57570b65c2e312308f93be9c[m
+Author: ImDen-Dev <neckromant90@gmail.com>
+Date:   Wed Apr 28 19:12:08 2021 +0300
+
+    initial commit
