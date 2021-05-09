@@ -81,7 +81,7 @@ export class TrainingService {
   }
 
   canceledExercise(progress): void {
-    this.activeTraining$.subscribe((ex) => {
+    this.activeTraining$.pipe(take(1)).subscribe((ex) => {
       this.addDataToDB({
         ...ex,
         date: new Date(),

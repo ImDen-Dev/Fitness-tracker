@@ -19,7 +19,6 @@ import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.com
 
 import { UiState } from './shared/ui.state';
 import { AuthState } from './auth/auth.state';
-import { TrainingState } from './training/training.state';
 
 @NgModule({
   declarations: [
@@ -36,7 +35,7 @@ import { TrainingState } from './training/training.state';
     FlexLayoutModule,
     AngularFireModule.initializeApp(environment.firebase),
     AuthModule,
-    NgxsModule.forRoot([UiState, AuthState, TrainingState]),
+    NgxsModule.forRoot([UiState, AuthState]),
     NgxsReduxDevtoolsPluginModule.forRoot(),
   ],
   providers: [],
