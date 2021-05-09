@@ -35,7 +35,9 @@ import { AuthState } from './auth/auth.state';
     FlexLayoutModule,
     AngularFireModule.initializeApp(environment.firebase),
     AuthModule,
-    NgxsModule.forRoot([UiState, AuthState]),
+    NgxsModule.forRoot([UiState, AuthState], {
+      developmentMode: !environment.production,
+    }),
     NgxsReduxDevtoolsPluginModule.forRoot(),
   ],
   providers: [],

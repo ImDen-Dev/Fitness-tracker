@@ -15,6 +15,8 @@ import {
   StartTraining,
   StopTraining,
 } from './training.actions';
+import firebase from 'firebase';
+import Timestamp = firebase.firestore.Timestamp;
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +28,7 @@ export class TrainingService {
   activeTraining$: Observable<ExerciseModel>;
 
   constructor(
-    private firestore: AngularFirestore,
+    private fStore: AngularFirestore,
     private uiService: UIService,
     private store: Store
   ) {}
@@ -34,7 +36,7 @@ export class TrainingService {
   fetchAvailableExercises(): void {
     this.store.dispatch(new StartLoading());
     this.fbSubscription.push(
-      this.firestore
+      this.fStore
         .collection('availableExercises')
         .snapshotChanges()
         .pipe(
@@ -95,7 +97,7 @@ export class TrainingService {
 
   fetchCompletedOrCancelledExercises(): void {
     this.fbSubscription.push(
-      this.firestore
+      this.fStore
         .collection('finishedExercises')
         .valueChanges()
         .subscribe((exercises: ExerciseModel[]) => {
@@ -109,6 +111,6 @@ export class TrainingService {
   }
 
   private addDataToDB(exercise: ExerciseModel): void {
-    this.firestore.collection<ExerciseModel>('finishedExercises').add(exercise);
+    this.fStore.collection<ExerciseModel>('finishedExercises').add(exercise);
   }
 }
