@@ -1,23 +1,29 @@
 import { ExerciseModel } from './exercise.model';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Subject, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Store } from '@ngxs/store';
+import { Observable, Subscription } from 'rxjs';
+import { map, take } from 'rxjs/operators';
+import { Select, Store } from '@ngxs/store';
 
 import { UIService } from '../shared/ui.service';
 import { StartLoading, StopLoading } from '../shared/ui.actions';
+
+import { TrainingState } from './training.state';
+import {
+  SetAvailableTrainings,
+  SetFinishedTrainings,
+  StartTraining,
+  StopTraining,
+} from './training.actions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TrainingService {
-  exerciseChanged = new Subject<ExerciseModel>();
-  exercisesChanged = new Subject<ExerciseModel[]>();
-  finishedExercisesChanged = new Subject<ExerciseModel[]>();
-  private availableExercises: ExerciseModel[] = [];
-  private runningExercise: ExerciseModel;
   private fbSubscription: Subscription[] = [];
+
+  @Select(TrainingState.getActiveTraining)
+  activeTraining$: Observable<ExerciseModel>;
 
   constructor(
     private firestore: AngularFirestore,
@@ -45,51 +51,46 @@ export class TrainingService {
         .subscribe(
           (exercises) => {
             this.store.dispatch(new StopLoading());
-            this.availableExercises = exercises;
-            this.exercisesChanged.next([...this.availableExercises]);
+            this.store.dispatch(new SetAvailableTrainings(exercises));
           },
-          (error) => {
+          () => {
             this.store.dispatch(new StopLoading());
             this.uiService.showSnackbar(
               'Fetching exercises failed, please try again later',
               null,
               3000
             );
-            this.exercisesChanged.next(null);
           }
         )
     );
   }
 
   startExercise(selectedId: string): void {
-    this.runningExercise = this.availableExercises.find(
-      (ex) => ex.id === selectedId
-    );
-    this.exerciseChanged.next({ ...this.runningExercise });
+    this.store.dispatch(new StartTraining(selectedId));
   }
 
   completeExercise(): void {
-    this.addDataToDB({
-      ...this.runningExercise,
-      date: new Date(),
-      state: 'completed',
+    this.activeTraining$.pipe(take(1)).subscribe((ex) => {
+      this.addDataToDB({
+        ...ex,
+        date: new Date(),
+        state: 'completed',
+      });
+      this.store.dispatch(new StopTraining());
     });
-    this.exerciseChanged.next(null);
   }
 
   canceledExercise(progress): void {
-    this.addDataToDB({
-      ...this.runningExercise,
-      date: new Date(),
-      duration: this.runningExercise.duration * (progress / 100),
-      calories: this.runningExercise.calories * (progress / 100),
-      state: 'cancelled',
+    this.activeTraining$.subscribe((ex) => {
+      this.addDataToDB({
+        ...ex,
+        date: new Date(),
+        duration: ex.duration * (progress / 100),
+        calories: ex.calories * (progress / 100),
+        state: 'cancelled',
+      });
+      this.store.dispatch(new StopTraining());
     });
-    this.exerciseChanged.next(null);
-  }
-
-  getRunningExercise(): ExerciseModel {
-    return { ...this.runningExercise };
   }
 
   fetchCompletedOrCancelledExercises(): void {
@@ -98,7 +99,7 @@ export class TrainingService {
         .collection('finishedExercises')
         .valueChanges()
         .subscribe((exercises: ExerciseModel[]) => {
-          this.finishedExercisesChanged.next(exercises);
+          this.store.dispatch(new SetFinishedTrainings(exercises));
         })
     );
   }

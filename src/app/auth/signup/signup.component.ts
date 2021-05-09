@@ -4,7 +4,6 @@ import { Select } from '@ngxs/store';
 import { Observable, Subscription } from 'rxjs';
 
 import { AuthService } from '../auth.service';
-import { UIService } from '../../shared/ui.service';
 import { UiState } from '../../shared/ui.state';
 
 @Component({
