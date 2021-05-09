@@ -6,7 +6,9 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { Select } from '@ngxs/store';
+import { AuthState } from '../../auth/auth.state';
 
 @Component({
   selector: 'app-sidenav-list',
@@ -18,14 +20,16 @@ export class SidenavListComponent implements OnInit, OnDestroy {
   isAuth = false;
   authSubscription: Subscription;
 
+  @Select(AuthState.isAuthenticated) isAuth$: Observable<boolean>;
+
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.authSubscription = this.authService.authChange.subscribe(
-      (authStatus) => {
-        this.isAuth = authStatus;
-      }
-    );
+    // this.authSubscription = this.authService.authChange.subscribe(
+    //   (authStatus) => {
+    //     this.isAuth = authStatus;
+    //   }
+    // );
   }
 
   onClose(): void {
@@ -38,8 +42,8 @@ export class SidenavListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.authSubscription) {
-      this.authSubscription.unsubscribe();
-    }
+    // if (this.authSubscription) {
+    //   this.authSubscription.unsubscribe();
+    // }
   }
 }

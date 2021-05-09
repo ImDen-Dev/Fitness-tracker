@@ -8,7 +8,8 @@ import { AuthDataModel } from './auth-data.model';
 import { TrainingService } from '../training/training.service';
 import { UIService } from '../shared/ui.service';
 
-import { Loading } from '../auth.actions';
+import { StartLoading, StopLoading } from '../shared/ui.actions';
+import { SetAuthenticated, SetUnauthenticated } from './auth.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -28,47 +29,43 @@ export class AuthService {
   initAuthListener(): void {
     this.afAuth.authState.subscribe((user) => {
       if (user) {
-        this.isAuthenticated = true;
-        this.authChange.next(true);
+        this.store.dispatch(new SetAuthenticated());
+        // this.isAuthenticated = true;
+        // this.authChange.next(true);
         this.router.navigate(['/training']);
       } else {
+        this.store.dispatch(new SetUnauthenticated());
         this.trainingService.cancelSubscriptions();
-        this.isAuthenticated = false;
-        this.authChange.next(false);
+        // this.isAuthenticated = false;
+        // this.authChange.next(false);
         this.router.navigate(['/login']);
       }
     });
   }
 
   registerUser(authData: AuthDataModel): void {
-    // this.uiService.loadingStateChanged.next(true);
-    this.store.dispatch(new Loading(true));
+    this.store.dispatch(new StartLoading());
     this.afAuth
       .createUserWithEmailAndPassword(authData.email, authData.password)
       .then((result) => {
-        // this.uiService.loadingStateChanged.next(false);
-        this.store.dispatch(new Loading(false));
+        this.store.dispatch(new StopLoading());
       })
       .catch((error) => {
         this.uiService.showSnackbar(error.message, null, 3000);
-        // this.uiService.loadingStateChanged.next(false);
-        this.store.dispatch(new Loading(false));
+        this.store.dispatch(new StopLoading());
       });
   }
 
   loginUser(authData: AuthDataModel): void {
-    // this.uiService.loadingStateChanged.next(true);
-    this.store.dispatch(new Loading(true));
+    this.store.dispatch(new StartLoading());
 
     this.afAuth
       .signInWithEmailAndPassword(authData.email, authData.password)
       .then((result) => {
-        // this.uiService.loadingStateChanged.next(false);
-        this.store.dispatch(new Loading(false));
+        this.store.dispatch(new StopLoading());
       })
       .catch((error) => {
-        // this.uiService.loadingStateChanged.next(false);
-        this.store.dispatch(new Loading(false));
+        this.store.dispatch(new StopLoading());
         this.uiService.showSnackbar(error.message, null, 3000);
       });
   }
@@ -77,7 +74,7 @@ export class AuthService {
     this.afAuth.signOut();
   }
 
-  isAuth(): boolean {
-    return this.isAuthenticated;
-  }
+  // isAuth(): boolean {
+  //   return this.isAuthenticated;
+  // }
 }

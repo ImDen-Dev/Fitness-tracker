@@ -1,29 +1,34 @@
 import { Injectable } from '@angular/core';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
-import { Loading } from '../auth.actions';
+import { StartLoading, StopLoading } from './ui.actions';
 
 export interface LoadingStateModel {
   isLoading: boolean;
 }
 
 @State<LoadingStateModel>({
-  name: 'Auth',
+  name: 'loading',
   defaults: {
     isLoading: false,
   },
 })
 @Injectable()
-export class AuthState {
+export class UiState {
   @Selector()
   static isLoading(state: LoadingStateModel): boolean {
     return state.isLoading;
   }
 
-  @Action(Loading)
-  loading(ctx: StateContext<LoadingStateModel>, action: Loading): void {
-    const state = ctx.getState();
+  @Action(StartLoading)
+  startLoading(ctx: StateContext<LoadingStateModel>): void {
     ctx.setState({
-      isLoading: action.isLoading,
+      isLoading: true,
+    });
+  }
+  @Action(StopLoading)
+  stopLoading(ctx: StateContext<LoadingStateModel>): void {
+    ctx.setState({
+      isLoading: false,
     });
   }
 }
